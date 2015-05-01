@@ -21,6 +21,11 @@ namespace :deploy do
     sudo "service postgresql stop"
     run "kill `cat /tmp/unicorn_rails3demo.pid`"
   end
+
+  task :restart do
+    stop
+    start
+  end
 end
 
 
