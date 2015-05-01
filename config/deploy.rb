@@ -1,14 +1,22 @@
 set :application, "rails3demo"
 set :repository,  "git://github.com/josemota/rails3demo"
 set :user, "vagrant"
-set :deploy_to, "/home/vagrant/apps/rails3demo"
+set :deploy_to, "/home/vagrant/rails3demo"
 set :use_sudo, false
 
 set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
-server "192.168.1.93", :app, :web, :db, primary: true
+server "192.168.1.108", :app, :web, :db, primary: true
 
+namespace :deploy do
+  task :start do
+    sudo "service nginx restart"
+    sudo  "service postgresql start"
+    run  "cd #{current_path} && bundle exec unicorn -c config/unicorn.rb -E production -D"
+  end
+end
+=begin
 namespace :deploy do
   task :start do
     sudo "service nginx start"
@@ -21,6 +29,16 @@ namespace :deploy do
     run "kill `cat /tmp/unicorn_rails3demo.pid`"
   end
 end
+
+task :nginx_status, roles: :web do
+  run "service nginx status"
+end
+
+task :pg_status, roles: :db do
+  run "service postgresql status"
+end
+
+=end
 
 # if you want to clean up old releases on each deploy uncomment this:
 # after "deploy:restart", "deploy:cleanup"
