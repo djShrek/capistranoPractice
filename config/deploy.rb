@@ -1,5 +1,5 @@
 set :application, "rails3demo"
-set :repository,  "git://github.com/josemota/rails3demo"
+set :repository,  "https://github.com/djShrek/capistranoPractice.git"
 set :user, "vagrant"
 set :deploy_to, "/home/vagrant/rails3demo"
 set :use_sudo, false
@@ -11,11 +11,19 @@ server "192.168.1.108", :app, :web, :db, primary: true
 
 namespace :deploy do
   task :start do
-    sudo "service nginx restart"
+    sudo "service nginx start"
     sudo  "service postgresql start"
     run  "cd #{current_path} && bundle exec unicorn -c config/unicorn.rb -E production -D"
   end
+
+  task :stop do
+    sudo "service nginx stop"
+    sudo "service postgresql stop"
+    run "kill `cat /tmp/unicorn_rails3demo.pid`"
+  end
 end
+
+
 =begin
 namespace :deploy do
   task :start do

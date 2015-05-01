@@ -1,4 +1,7 @@
 Rails3demo::Application.routes.draw do
+  resources :messages
+
+
   resources :posts
 
 
